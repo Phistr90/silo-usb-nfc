@@ -90,8 +90,18 @@ if (argv['json']) { exportJSON = true }
 if (argv['saveSig']) { exportSig = true }
 if (argv['reveal']) { reveal = true }
 
-if(reveal && !argv['block'] || reveal && !argv['blockDigits']  || reveal && !argv['to_addr']){
-	throw new Error('--reveal requires --to_addr, --block and --blockDigits to be set');
+if( reveal && !argv['to_addr']){
+  throw new Error('--reveal requires --to_addr to be set');
+}
+
+if(reveal && (!argv['block'] || !argv['blockDigits'])){
+  request('https://api.blockcypher.com/v1/eth/main', function (error, response, body) {
+    if(error) {logger.err('error:', error);} // Print the error if one occurred
+    var json = JSON.parse(body); 
+    blockDigits = json.height;
+    block = json.hash;
+    logger.info('Reveal flag requires block and blockDigits. Either of them was not set, so we set them to the latest mainnet block ' + blockDigits + ' with its blockhash ' + block);
+  });
 }
 
 argv['block'] ? blockNumber = argv['block'] : logger.info(`no block number given, using random number: ` + blockNumber);
