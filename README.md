@@ -77,11 +77,11 @@ node src/scan.js --command=00 --block=3c2877a9a9701eb80ce3974a14e0a1ab80308c1cb9
 
 ## Reveal instructions
 
-- Run scan script with: ```node src/scan.js --command=00 --to_addr=deadbeef12997707982080F6452db15485c1c394 --reveal ``` and subsitute to_addr with your address that holds the NFT
+- Run scan script with: ```node src/scan.js --command=00 --to_addr=deadbeef12997707982080F6452db15485c1c394 --reveal ``` and substitute to_addr with your address that holds the NFT
 - Scan your passport and produce an output like [below](#reveal-output)
 - Go to etherscan and submit the reveal tx: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function and the inputs without ' from your scan output
 - Make sure you are sending the tx from the to_addr which holds the NFT
-- Also make sure that the tx confirms within 256 blocks (about 50mins) after blockDigits or it will fail 
+- Also make sure that the tx confirms within 256 blocks (about 50mins) after blockDigits / after you started this process or it will fail 
 - Once your reveal tx was successful finish your reveal by running the command:
 
 ```
