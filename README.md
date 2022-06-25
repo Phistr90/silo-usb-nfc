@@ -77,8 +77,7 @@ node src/scan.js --command=00 --block=3c2877a9a9701eb80ce3974a14e0a1ab80308c1cb9
 
 ## Reveal instructions
 
-- Check for the current Ethereum blocknumber and its blockhash
-- With it run: ```node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953588a986bd3a3a8898d5380 --to_addr=deadbeef12997707982080F6452db15485c1c394 --blockDigits=15023561 --reveal ``` and substitute your for block, blockDigits and to_addr
+- Run scan script with: ```node src/scan.js --command=00 --to_addr=deadbeef12997707982080F6452db15485c1c394 --reveal ``` and subsitute to_addr with your address that holds the NFT
 - Scan your passwort and produce an output like [below](reveal-output)
 - Go to etherscan and submit the reveal tx: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function and the inputs with ' from your scan output
 - Make sure you are sending the tx from the to_addr which holds the NFT
