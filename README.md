@@ -75,6 +75,22 @@ node src/scan.js --command=00 --block=3c2877a9a9701eb80ce3974a14e0a1ab80308c1cb9
 7:12:33 PM – ACS ACR122U PICC Interface info: debugBytes:  'Tag written\x00'
 ```
 
+## Reveal instructions
+
+- Check for the current Ethereum blocknumber and its blockhash
+- With it run: ```node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953588a986bd3a3a8898d5380 --to_addr=deadbeef12997707982080F6452db15485c1c394 --blockDigits=15023561 --reveal ``` and substitute your for block, blockDigits and to_addr
+- Scan your passwort and produce an output like [below](reveal-output)
+- Go to etherscan and submit the reveal tx: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function and the inputs with ' from your scan output
+- Make sure you are sending the tx from the to_addr which holds the NFT
+- Also make sure that the tx confirms within 256 blocks (about 50mins) after blockDigits or it will fail 
+- Once your reveal tx was successful finish your reveal by running the command:
+
+```
+curl --location --request POST 'https://bridge.cryptocash.dev/reveal' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'tx=0xdead'
+```
+where tx is the successful reveal tx.
+- Enjoy your dope ass statue. It should now show up in the kong app when scanning or on Opensea (make sure to refresh metadata on Opensea).
+
 ## Reveal Example 
 
 ```
@@ -124,22 +140,6 @@ node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953
 1:54:51 PM – info: OracleSignature: 0xf5190e2969f1f040571a9bf7cf5cf1dc8217492e0852e00ca89ddfe63771e60a230a9b970da0e1cf27a6ef3f5403314186e8145a933c1e926e483c4c8e941ab71b
 
 ```
-
-## Reveal instructions
-
-- Check for the current Ethereum blocknumber and its blockhash
-- With it run: ```node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953588a986bd3a3a8898d5380 --to_addr=deadbeef12997707982080F6452db15485c1c394 --blockDigits=15023561 --reveal ``` and substitute your for block, blockDigits and to_addr
-- Scan your passwort and produce an output like above
-- Go to etherscan and submit the reveal tx: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function and the inputs with ' from your scan output
-- Make sure you are sending the tx from the to_addr which holds the NFT
-- Also make sure that the tx confirms within 256 blocks (about 50mins) after blockDigits or it will fail 
-- Once your reveal tx was successful finish your reveal by running the command:
-
-```
-curl --location --request POST 'https://bridge.cryptocash.dev/reveal' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'tx=0xdead'
-```
-where tx is the successful reveal tx.
-- Enjoy your dope ass statue. It should now show up in the kong app when scanning or on Opensea (make sure to refresh metadata on Opensea).
 
 ## Notes
 
