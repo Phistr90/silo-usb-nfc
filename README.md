@@ -26,7 +26,7 @@ The first generation SiLo's, including KONG Cash and KONG Passports, will accept
 - `55`: This is a special command with only a limited set of uses. It will generate a signature using the ECDSA keypair associated with `tertiaryPublicKey`. It first generation SiLo's it can be used a maximum of 5 times before refusing to sign additional data.
 - `56`: This is a special command that will reveal the `tertiaryPublicKey` which is not normally shown in any of the NDEF records.
 
-## Exmaple
+## Example
 
 ```
 node src/scan.js --command=00 --block=3c2877a9a9701eb80ce3974a14e0a1ab80308c1cb9907c5a0a30f4c0945c3180
