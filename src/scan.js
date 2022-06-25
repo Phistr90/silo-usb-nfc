@@ -3,7 +3,7 @@
  * @description SiLo NFC USB scan script
  */
 
- const { exec } = require('node:child_process');
+const { exec } = require('node:child_process');
 const { helpers, crypto, elliptic } = require('../lib/helpers.js');
 const { logger } = require('../lib/pretty-logger.js');
 
@@ -11,12 +11,15 @@ const { NFC } = require('nfc-pcsc');
 const crc  = require('crc'); // we need a specific crc, 'crc16ccitt'
 const argv = require('minimist')(process.argv.slice(2));
 const fs   = require('fs');
+const request = require('request');
 var QRCode = require('qrcode')
 
 const nfc = new NFC();
 
 logger.info(`command`, argv['command']);
+logger.info('print reveal data', argv['reveal']);
 logger.info(`block number`, argv['block']);
+logger.info('actual block number', argv['blockDigits']);
 logger.info(`to address`, argv['to_addr']);
 logger.info(`validation pub key`, argv['pubkey']);
 logger.info(`export json`, argv['json']);
@@ -35,6 +38,12 @@ logger.info(`devices to match`, argv['matchFile'])
 // --block=
 // Usage: Add the desired blockhash to feed into the Kong signature; if blank a second 
 // random number is generated.
+//
+//--reveal
+// Usage: Indicates via boolean whether or not to print data required for the NFT reveal process.
+//
+// --blockDigits=
+// Usage: Add the block number that corresponds to the blockhash provided; needed for reveal
 //
 // --to_addr=
 // Usage: Add the desired to address to feed into the Kong signature; if blank a second 
@@ -66,6 +75,7 @@ logger.info(`devices to match`, argv['matchFile'])
 
 var command = '00';
 var blockNumber = crypto.randomBytes(32).toString('hex'); // TODO: swap with actual blockNumber
+var blockDigits = 0;
 var toAddress = crypto.randomBytes(20).toString('hex');
 var userPubkey = null;
 var exportJSON = false;
@@ -73,12 +83,19 @@ var exportSig = false;
 var matchFile = null;
 var matchDevices = [];
 var testMatch = null;
+var reveal = false;
 
 if (argv['command']) { command = argv['command'] }
 if (argv['json']) { exportJSON = true }
 if (argv['saveSig']) { exportSig = true }
+if (argv['reveal']) { reveal = true }
+
+if(reveal && !argv['block'] || reveal && !argv['blockDigits']  || reveal && !argv['to_addr']){
+	throw new Error('--reveal requires --to_addr, --block and --blockDigits to be set');
+}
 
 argv['block'] ? blockNumber = argv['block'] : logger.info(`no block number given, using random number: ` + blockNumber);
+argv['blockDigits'] ? blockDigits = argv['blockDigits'] : logger.info(`no actual block number given, using random number: ` + blockDigits);
 argv['to_addr'] ? toAddress = argv['to_addr'] : logger.info(`no to address given, using random number: ` + toAddress);
 argv['pubkey'] ? userPubkey = argv['pubkey'].toString('hex') : logger.info(`no pubkey given, using externalPublicKey after read`);
 argv['matchFile'] ? matchFile = argv['matchFile'] : logger.info(`no file device match file given.`);
@@ -349,8 +366,7 @@ nfc.on('reader', async reader => {
       logger.info(`externalSignature`, reader, externalSignature);
       logger.info(`internalSignature`, reader, internalSignature);
       logger.info(`counter`, reader, counter);
-
-
+	    
       var verficationKey = externalPublicKey
 
       if (commandCode == '55' || commandCode == '56') {verficationKey = internalSignature} // Special case where the provisioning public key is store where the internal signature goes
@@ -389,6 +405,41 @@ nfc.on('reader', async reader => {
       if (matchDevices) {
         renderDevice(externalPublicKeyHash);
       }
+
+      /********************
+      * Print reveal data *
+      ********************/
+      if(reveal){
+
+	var x = externalPublicKey.slice(0, externalPublicKey.length/2);
+	var y = externalPublicKey.slice(externalPublicKey.length/2);
+	var r = externalSignature.slice(0, externalSignature.length/2);
+	var s = externalSignature.slice(externalSignature.length/2);
+
+	var urlRequest = 'https://bridge.cryptocash.dev/reveal?x=' + x + '&y=' + y + '&r=' + r + '&s=' + s + '&blockNumber=' + blockDigits + '&addr=' + toAddress;
+
+	// var getOracleSigCommand = 'curl --location --request GET '+ '\'' + urlRequest + '\'';
+	// logger.info('Get OracleSignature here:', getOracleSigCommand);
+	// logger.info('URL: ', urlRequest);
+	
+	request(urlRequest, { json: true }, (err, res, body) => {
+	  if(err){
+	    logger.error(err);
+	  } else {
+	    if(!err && body)
+            logger.info('######################################## REVEAL INSTRUCTIONS ########################################################');
+            logger.info('Use this data to submit the reveal tx from the same address holding the NFT' + '(0x' + toAddress + '): ');
+            logger.info('You can submit the reveal tx eg on etherscan: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function; inputs without \' ');
+            logger.info('tokenID', 'Your token ID');
+            logger.info('rs', '[0x' + r + ',' + '0x' + s + ']');
+	    logger.info('primaryPublicKeyX', '0x' + x);
+	    logger.info('primaryPublicKeyY', '0x' + y);
+	    logger.info('blockNumber', blockDigits);
+            logger.info('merkleRoot', '0x3b33d17cd7b7cfa954c719aceea33b91d2f8e955e70b123171f626a1ac33a475');
+	    logger.info('OracleSignature: ' + body);
+	  }
+	});	
+       }
 
       //
       // EXPORT JSON or VERIFY
