@@ -31,7 +31,7 @@ The first generation SiLo's, including KONG Cash and KONG Passports, will accept
 - `55`: This is a special command with only a limited set of uses. It will generate a signature using the ECDSA keypair associated with `tertiaryPublicKey`. It first generation SiLo's it can be used a maximum of 5 times before refusing to sign additional data.
 - `56`: This is a special command that will reveal the `tertiaryPublicKey` which is not normally shown in any of the NDEF records.
 
-## Example
+## Scan Example
 
 ```
 node src/scan.js --command=00 --block=3c2877a9a9701eb80ce3974a14e0a1ab80308c1cb9907c5a0a30f4c0945c3180
@@ -73,6 +73,56 @@ node src/scan.js --command=00 --block=3c2877a9a9701eb80ce3974a14e0a1ab80308c1cb9
 7:12:32 PM – ACS ACR122U PICC Interface info: verfication worked? true
 7:12:32 PM – ACS ACR122U PICC Interface info: read diagnostic:
 7:12:33 PM – ACS ACR122U PICC Interface info: debugBytes:  'Tag written\x00'
+```
+
+## Reveal Example 
+
+```
+node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953588a986bd3a3a8898d5380 --to_addr=deadbeef12997707982080F6452db15485c1c394 --blockDigits=15023561 --reveal
+```
+
+### Reveal Output
+
+```
+1:54:44 PM – ACS ACR122U PICC Interface 00 00 info: card detected {
+  atr: <Buffer 3b 8f 80 01 80 4f 0c a0 00 00 03 06 03 00 03 00 00 00 00 68>,
+  standard: 'TAG_ISO_14443_3',
+  type: 'TAG_ISO_14443_3',
+  uid: '0498a0b24e6680'
+}
+1:54:44 PM – ACS ACR122U PICC Interface 00 00 info: configBytes <Buffer 29 32 f8 48>
+1:54:44 PM – ACS ACR122U PICC Interface 00 00 info: outputRecord:
+1:54:45 PM – info: externalPublicKey 'f8c27628e8d5aedb69f1f277305cb5d6e36a1049777270b6d89333fdc8a6cd115b5747111ea2719881ff31cd542546d89ec93fb843a7e1e01a4e6f0d1a43959f'
+1:54:45 PM – info: internalPublicKey '4b7550c9a665cb96e864b96488e57d1a6b648851f5425a13cd17fe2aa3f91304e885b6a55d0efb15fcde883e94b1a48dfb1c75335eb30b6d77332f6d3e8acc80'
+1:54:45 PM – info: atecc608aSerial '012328fe4164dacbee'
+1:54:45 PM – info: configZoneBytes '012328fe000060034164dacbee616900c000006889a08aa089a089a089a089a089a089a000000000000000000000000000000000ffffffff00000000ffffffff000000000000000000000000000000000000000000000000fcd9000000000000310071003100310031003100310031001c0070007000700070003c003c003c00'
+1:54:45 PM – info: externalPublicKeyHash '3f4b75147022901fde6a9c6cd7a55a3ba0713e6b47fb9ae3170f490c8697405f'
+1:54:45 PM – info: toAddress 'deadbeef12997707982080F6452db15485c1c394'
+1:54:45 PM – info: blockNumber 'bd09d1327be9c5bf41f08978e488d00af9af5a5953588a986bd3a3a8898d5380'
+1:54:45 PM – info: combinedHash '8107515ee39d8fb715d4c951c495f138627b488934ce162c27ac1b03885cddc8'
+1:54:45 PM – ACS ACR122U PICC Interface 00 00 info: crcBuffer <Buffer 4c 34>
+1:54:45 PM – ACS ACR122U PICC Interface 00 00 info: inputBufferWrite
+1:54:45 PM – ACS ACR122U PICC Interface 00 00 info: readLastIcBlockAfterWrite: <Buffer 00 00 00 00>
+1:54:48 PM – ACS ACR122U PICC Interface 00 00 info: read outputRecord:
+1:54:48 PM – ACS ACR122U PICC Interface 00 00 info: lastHash '8107515ee39d8fb715d4c951c495f138627b488934ce162c27ac1b03885cddc826'
+1:54:48 PM – ACS ACR122U PICC Interface 00 00 info: externalSignature 'ccb37cffb88c706adbaaa62b443878bd82a19eaea83db85f4fa52bb4bcde1a3067598babb085f4f2f1d9ea030daccd9b501492457f0440a9f790b03d6c48597b'
+1:54:48 PM – ACS ACR122U PICC Interface 00 00 info: internalSignature 'e8f7d92df4bc3ec58de62edd52d03917bec82fa1943f2ff0d2caa651b313a7f330a500d80d4f588c9c84f9efe692c771b902d4c26234d1aa4d7145bc2f913883'
+1:54:48 PM – ACS ACR122U PICC Interface 00 00 info: counter '00'
+1:54:49 PM – ACS ACR122U PICC Interface 00 00 info: verfication worked? true
+1:54:49 PM – ACS ACR122U PICC Interface 00 00 info: read diagnostic:
+1:54:49 PM – ACS ACR122U PICC Interface 00 00 info: debugBytes:  'Tag written\x00'
+1:54:49 PM – info: no device found.
+1:54:51 PM – info: ######################################## REVEAL INSTRUCTIONS ########################################################
+1:54:51 PM – info: Use this data to submit the reveal tx from the same address holding the NFT(0x9acc748be66b780137ac3693b39454ccdf32197f): 
+1:54:51 PM – info: You can submit the reveal tx eg on etherscan: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function; inputs without ' 
+1:54:51 PM – info: tokenID 'Your token ID'
+1:54:51 PM – info: rs '[0xccb37cffb88c706adbaaa62b443878bd82a19eaea83db85f4fa52bb4bcde1a30,0x67598babb085f4f2f1d9ea030daccd9b501492457f0440a9f790b03d6c48597b]'
+1:54:51 PM – info: primaryPublicKeyX '0xf8c27628e8d5aedb69f1f277305cb5d6e36a1049777270b6d89333fdc8a6cd11'
+1:54:51 PM – info: primaryPublicKeyY '0x5b5747111ea2719881ff31cd542546d89ec93fb843a7e1e01a4e6f0d1a43959f'
+1:54:51 PM – info: blockNumber 15023561
+1:54:51 PM – info: merkleRoot '0x3b33d17cd7b7cfa954c719aceea33b91d2f8e955e70b123171f626a1ac33a475'
+1:54:51 PM – info: OracleSignature: 0xf5190e2969f1f040571a9bf7cf5cf1dc8217492e0852e00ca89ddfe63771e60a230a9b970da0e1cf27a6ef3f5403314186e8145a933c1e926e483c4c8e941ab71b
+
 ```
 
 ## Notes
