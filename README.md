@@ -11,7 +11,9 @@ Tested on MacOS and Raspbian with `node` 17.1.0 and `npm` 8.1.2. The key package
 ## Arguments
 
 - `command`: The command code sent to the SiLo. See possible command codes referenced below.
+- `reveal`: Indicates via boolean whether or not to print data and instructions required for the NFT reveal process.
 - `block`: The desired blockhash to include within the SiLo signature. If blank, a random number is used.
+- `blockDigits`:Tthe block number that corresponds to the blockhash provided; needed for reveal
 - `to_addr`: The desired Ethereum address to include within the SiLo signature. If blank, a random number is used.
 - `pubkey`: Force usage of another ECDSA P256 public key in order to validate the signature. Useful when validating a `tertiaryPublicKey` signature on a subsequent tap.
 - `json`: Indicate via boolean whether or not to print out certain SiLo values in a JSON blob. Note that under command `00` these values are missing the `tertiaryPublicKey`. NOTE: requires an `export` dir to be present in the root project directory to be created.
@@ -29,7 +31,7 @@ The first generation SiLo's, including KONG Cash and KONG Passports, will accept
 - `55`: This is a special command with only a limited set of uses. It will generate a signature using the ECDSA keypair associated with `tertiaryPublicKey`. It first generation SiLo's it can be used a maximum of 5 times before refusing to sign additional data.
 - `56`: This is a special command that will reveal the `tertiaryPublicKey` which is not normally shown in any of the NDEF records.
 
-## Exmaple
+## Example
 
 ```
 node src/scan.js --command=00 --block=3c2877a9a9701eb80ce3974a14e0a1ab80308c1cb9907c5a0a30f4c0945c3180
