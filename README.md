@@ -113,7 +113,7 @@ node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953
 1:54:49 PM – ACS ACR122U PICC Interface 00 00 info: debugBytes:  'Tag written\x00'
 1:54:49 PM – info: no device found.
 1:54:51 PM – info: ######################################## REVEAL INSTRUCTIONS ########################################################
-1:54:51 PM – info: Use this data to submit the reveal tx from the same address holding the NFT(0x9acc748be66b780137ac3693b39454ccdf32197f): 
+1:54:51 PM – info: Use this data to submit the reveal tx from the same address holding the NFT(0xdeadbeef12997707982080F6452db15485c1c394): 
 1:54:51 PM – info: You can submit the reveal tx eg on etherscan: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function; inputs without ' 
 1:54:51 PM – info: tokenID 'Your token ID'
 1:54:51 PM – info: rs '[0xccb37cffb88c706adbaaa62b443878bd82a19eaea83db85f4fa52bb4bcde1a30,0x67598babb085f4f2f1d9ea030daccd9b501492457f0440a9f790b03d6c48597b]'
