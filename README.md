@@ -125,6 +125,18 @@ node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953
 
 ```
 
+## Reveal instructions
+
+- Check for the current Ethereum blocknumber and its blockhash
+- With it run: ```node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953588a986bd3a3a8898d5380 --to_addr=deadbeef12997707982080F6452db15485c1c394 --blockDigits=15023561 --reveal ``` and substitute your for block, blockDigits and to_addr
+- Scan your passwort and produce an output like above
+- Go to etherscan and submit the reveal tx: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function and the inputs with ' from your scan output
+- Make sure you are sending the tx from the to_addr which holds the NFT
+- Also make sure that the tx confirms within 256 blocks (about 50mins) after blockDigits or it will fail 
+- Once your reveal tx was successful finish your reveal by running the command:
+```curl --location --request POST 'https://bridge.cryptocash.dev/reveal' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'tx=0xdead'
+```
+
 ## Notes
 
 ### NFC Scanner
