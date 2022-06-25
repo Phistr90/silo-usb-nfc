@@ -134,8 +134,12 @@ node src/scan.js --command=00 --block=bd09d1327be9c5bf41f08978e488d00af9af5a5953
 - Make sure you are sending the tx from the to_addr which holds the NFT
 - Also make sure that the tx confirms within 256 blocks (about 50mins) after blockDigits or it will fail 
 - Once your reveal tx was successful finish your reveal by running the command:
-```curl --location --request POST 'https://bridge.cryptocash.dev/reveal' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'tx=0xdead'
+
 ```
+curl --location --request POST 'https://bridge.cryptocash.dev/reveal' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'tx=0xdead'
+```
+where tx is the successful reveal tx.
+- Enjoy your dope ass statue. It should now show up in the kong app when scanning or on Opensea (make sure to refresh metadata on Opensea).
 
 ## Notes
 
