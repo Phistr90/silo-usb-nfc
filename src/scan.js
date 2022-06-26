@@ -436,7 +436,6 @@ nfc.on('reader', async reader => {
 	  if(err){
 	    logger.error(err);
 	  } else {
-	    if(!err && body)
             logger.info('######################################## REVEAL INSTRUCTIONS ########################################################');
             logger.info('Use this data to submit the reveal tx from the same address holding the NFT' + '(0x' + toAddress + '): ');
             logger.info('You can submit the reveal tx eg on etherscan: https://etherscan.io/address/0x1a8befa8c5fe2d4fb554dff70d79f679884519d9#writeContract using the revealOracle function; inputs without \' ');
